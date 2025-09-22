@@ -9,7 +9,7 @@ import { createClient } from '@supabase/supabase-js';
 // Vercel 환경 변수에서 Supabase URL과 anon key를 가져옵니다.
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 // Vercel의 서버리스 함수는 (req, res) 형태의 단일 함수를 export 해야 합니다.
