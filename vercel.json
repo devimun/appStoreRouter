@@ -1,3 +1,4 @@
 {
-  "name": "moneyfit_router"
+  "name": "moneyfit_router",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
