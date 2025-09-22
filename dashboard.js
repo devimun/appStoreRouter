@@ -1,5 +1,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 플러그인 등록
+    Chart.register(ChartDataLabels);
+
     // DOM 요소
     const totalViewsEl = document.getElementById('total-views');
     const hourlyChartCanvas = document.getElementById('hourly-chart');
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         deviceFilterSelect.addEventListener('change', renderDetailedChart);
     }
 
-    // --- 시간대별 채널 조회수 차트 (그룹 바로 변경) ---
+    // --- 시간대별 채널 조회수 차트 (데이터 레이블 추가) ---
     function renderHourlyChart() {
         const selectedDate = datePicker.value;
         const filteredLogs = allLogs.filter(log => log.timestamp.startsWith(selectedDate));
@@ -81,7 +84,19 @@ document.addEventListener('DOMContentLoaded', () => {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { title: { display: true, text: `${selectedDate} 시간대별 조회수` } },
+                plugins: {
+                    title: { display: true, text: `${selectedDate} 시간대별 조회수` },
+                    tooltip: { enabled: false }, // 툴팁 비활성화
+                    datalabels: { // 데이터 레이블 플러그인 설정
+                        display: true,
+                        color: '#333',
+                        anchor: 'end',
+                        align: 'top',
+                        font: { size: 10 },
+                        // 값이 0보다 클 때만 숫자를 표시
+                        formatter: (value) => value > 0 ? value : null 
+                    }
+                },
                 scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true } }
             }
         });
@@ -155,7 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { title: { display: true, text: `채널 [${selectedChannel}] 상세 조회수` } },
+                plugins: {
+                    title: { display: true, text: `채널 [${selectedChannel}] 상세 조회수` },
+                    tooltip: { enabled: false }, // 툴팁 비활성화
+                    datalabels: { display: false } // 여기서는 데이터 레이블 비활성화
+                },
                 scales: { x: { beginAtZero: true }, y: { stacked: false } }
             }
         });
