@@ -1,16 +1,16 @@
 /**
  * @file: /api/log.js
- * @description: 접속자 정보를 수신하여 Vercel KV 데이터베이스에 기록하는 서버리스 함수입니다.
+ * @description: 접속자 정보를 수신하여 Supabase 데이터베이스에 기록하는 서버리스 함수입니다.
  */
 
-import { createClient } from '@vercel/kv';
+import { createClient } from '@supabase/supabase-js';
 
-// Vercel KV 클라이언트를 생성합니다.
-// 관련 환경 변수(KV_URL, KV_REST_API_URL 등)는 Vercel이 자동으로 주입해 줍니다.
-const kv = createClient({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-});
+// Supabase 클라이언트를 생성합니다.
+// Vercel 환경 변수에서 Supabase URL과 anon key를 가져옵니다.
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 // Vercel의 서버리스 함수는 (req, res) 형태의 단일 함수를 export 해야 합니다.
 export default async function handler(req, res) {
@@ -38,14 +38,18 @@ export default async function handler(req, res) {
   };
 
   try {
-    // --- Vercel KV에 데이터 저장 ---
-    // 'logs'라는 이름의 리스트(list)에 새로운 로그 데이터를 추가합니다.
-    await kv.lpush('logs', logData);
+    // --- Supabase에 데이터 저장 ---
+    // 'logs' 테이블에 새로운 로그 데이터를 추가합니다.
+    const { error } = await supabase.from('logs').insert([logData]);
+
+    if (error) {
+      throw error;
+    }
 
     // 성공적으로 로그가 기록되면 클라이언트에 성공 메시지를 응답합니다.
     res.status(200).json({ message: 'Logged successfully' });
   } catch (error) {
-    console.error('Error writing to Vercel KV:', error);
+    console.error('Error writing to Supabase:', error);
     // DB 쓰기 에러가 발생해도 사용자 경험을 막지 않기 위해 성공 응답을 보냅니다.
     return res.status(200).json({ message: 'Logged (with DB write error)' });
   }
