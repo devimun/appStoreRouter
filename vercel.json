@@ -2,7 +2,7 @@
   "name": "moneyfit_router",
   "rewrites": [
     {
-      "source": "/((?!api/|assets/|_vercel/).*)",
+      "source": "/((?!api/|assets/|_vercel/|dashboard\\.html).*)",
       "destination": "/index.html"
     }
   ]
