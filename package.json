@@ -8,6 +8,7 @@
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
-    "@vercel/kv": "^3.0.0"
+    "@vercel/kv": "^3.0.0",
+    "@vercel/speed-insights": "^1.2.0"
   }
 }
