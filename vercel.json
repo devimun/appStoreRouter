@@ -1,4 +1,9 @@
 {
   "name": "moneyfit_router",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!api/|assets/|_vercel/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
