@@ -1,0 +1,104 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>머니핏 - 당신의 똑똑한 소비생활</title>
+    <style>
+      /* 기본 스타일링: 페이지를 깔끔하게 중앙 정렬합니다. */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f2f5;
+        color: #333;
+      }
+      .container {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 1em;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 사용자에게 보여질 간단한 랜딩 메시지 -->
+    <div class="container">
+      <h1>머니핏</h1>
+      <p>앱 스토어로 이동 중입니다...</p>
+    </div>
+
+    <script>
+      // 페이지 로드가 완료되면 스크립트를 실행합니다.
+      document.addEventListener("DOMContentLoaded", function () {
+        // --- 1. 사용자 정보 수집 ---
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        
+        // URL 경로를 분석하여 채널 및 세부 정보를 추출합니다.
+        // e.g., /everytime/yonsei -> channel: 'everytime', details: ['yonsei']
+        const path = window.location.pathname.substring(1);
+        const pathSegments = path.split('/').filter(Boolean); // 빈 문자열 제거
+        const channel = pathSegments[0] || "unknown";
+        const details = pathSegments.slice(1);
+
+        // --- 2. 앱 스토어 URL 정의 ---
+        const androidUrl =
+          "https://play.google.com/store/apps/details?id=com.moneyfitapp.app";
+        const iosUrl =
+          "https://apps.apple.com/app/money-fit/id6749416452";
+
+        // --- 3. 기기 종류 판별 ---
+        let targetUrl = androidUrl; // 기본값은 안드로이드로 설정
+        let device = "desktop_or_unknown";
+
+        if (/android/i.test(userAgent)) {
+          targetUrl = androidUrl;
+          device = "android";
+        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+          targetUrl = iosUrl;
+          device = "ios";
+        }
+
+        // --- 4. 백엔드로 로그 전송 ---
+        // 수집된 정보를 백엔드 API(/api/log)로 전송합니다.
+        fetch(`/api/log`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            channel: channel,
+            details: details, // 세부 정보를 배열로 전송
+            device: device,
+            userAgent: userAgent,
+          }),
+        })
+          .then(() => {
+            // --- 5. 앱 스토어로 리다이렉트 ---
+            // 로그 전송 성공 후, 판별된 기기에 맞는 앱 스토어 URL로 사용자를 이동시킵니다.
+            window.location.href = targetUrl;
+          })
+          .catch((error) => {
+            console.error("Error logging data:", error);
+            // 로그 전송에 실패하더라도 사용자는 앱 스토어로 이동해야 하므로, 리다이렉트를 실행합니다.
+            window.location.href = targetUrl;
+          });
+      });
+    </script>
+  </body>
+</html>

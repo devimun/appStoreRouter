@@ -1,0 +1,12 @@
+{
+  "name": "app-store-router",
+  "version": "1.0.0",
+  "description": "App Store Router for Marketing Analytics",
+  "main": "index.html",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/kv": "^3.0.0"
+  }
+}
