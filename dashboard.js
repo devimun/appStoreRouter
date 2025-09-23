@@ -77,6 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
             borderWidth: 1
         }));
 
+        let maxDataValue = 0;
+        datasets.forEach(dataset => {
+            const maxInDataset = Math.max(...dataset.data);
+            if (maxInDataset > maxDataValue) {
+                maxDataValue = maxInDataset;
+            }
+        });
+
         if (hourlyChart) hourlyChart.destroy();
         hourlyChart = new Chart(hourlyChartCanvas, {
             type: 'bar',
@@ -94,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         align: 'top',
                         font: { size: 10 },
                         // 값이 0보다 클 때만 숫자를 표시
-                        formatter: (value) => value > 0 ? value : null 
+                        formatter: (value) => value > 0 ? value : null
                     }
                 },
                 scales: {
@@ -104,7 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         beginAtZero: true,
                         ticks: {
                             stepSize: 1
-                        }
+                        },
+                        max: maxDataValue > 0 ? maxDataValue + 1 : 1
                     }
                 }
             }
@@ -171,6 +180,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
         }
 
+        let maxDataValue = 0;
+        datasets.forEach(dataset => {
+            const maxInDataset = Math.max(...dataset.data);
+            if (maxInDataset > maxDataValue) {
+                maxDataValue = maxInDataset;
+            }
+        });
+
         if (detailedChart) detailedChart.destroy();
         detailedChart = new Chart(detailedChartCanvas, {
             type: 'bar',
@@ -196,7 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         beginAtZero: true,
                         ticks: {
                             stepSize: 1
-                        }
+                        },
+                        max: maxDataValue > 0 ? maxDataValue + 1 : 1
                     },
                     y: { stacked: false }
                 }
