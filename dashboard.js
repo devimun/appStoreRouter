@@ -97,7 +97,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         formatter: (value) => value > 0 ? value : null 
                     }
                 },
-                scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true } }
+                scales: {
+                    x: { stacked: false },
+                    y: {
+                        stacked: false,
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
             }
         });
     }
@@ -173,9 +182,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: {
                     title: { display: true, text: `채널 [${selectedChannel}] 상세 조회수` },
                     tooltip: { enabled: false }, // 툴팁 비활성화
-                    datalabels: { display: false } // 여기서는 데이터 레이블 비활성화
+                    datalabels: { // 데이터 레이블 플러그인 설정
+                        display: true,
+                        color: '#333',
+                        anchor: 'end',
+                        align: 'end', // 가로 막대그래프이므로 끝(end)에 정렬
+                        font: { size: 10 },
+                        formatter: (value) => value > 0 ? value : null
+                    }
                 },
-                scales: { x: { beginAtZero: true }, y: { stacked: false } }
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                    y: { stacked: false }
+                }
             }
         });
     }
